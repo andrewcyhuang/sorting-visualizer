@@ -1,0 +1,29 @@
+.bars-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 1200px;
+    max-width: 1200px;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    background-color: white;
+}
+
+.bar {
+    width: 4px;
+    display: inline-block;
+    margin: 0 2 px;
+}
+
+.button-group {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translate(-50%, -50%);
+}
+
+.button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
