@@ -11,7 +11,7 @@ const NUM_BARS: number = 300;
 const DEFAULT_BAR_COLOUR: string = '#660099';
 const INSERTION_POINT_BAR_COLOUR: string = '#0000FF';
 const SWAPPING_POINT_BAR_COLOUR: string = '#FF00CC';
-const ANIMATION_SPEED_MS: number = 0.03;
+const ANIMATION_SPEED_MS: number = .1;
 
 export class SortingVisualizer extends React.Component<{}, ArrayState> {
     constructor(props: any) {
@@ -41,10 +41,6 @@ export class SortingVisualizer extends React.Component<{}, ArrayState> {
                                 key={idx}
                                 style={{
                                     backgroundColor: DEFAULT_BAR_COLOUR,
-                                    /* filter: `brightness(
-                                    ${
-                                        (value / MAX_BAR_HEIGHT) > .1 ? .95 - (value / MAX_BAR_HEIGHT) : .05
-                                        })`, */
                                     height: `${value}px`,
                                 }}
                             />
@@ -136,7 +132,7 @@ export class SortingVisualizer extends React.Component<{}, ArrayState> {
             barB.style.backgroundColor = SWAPPING_POINT_BAR_COLOUR;
             setTimeout(() => {
                 resolve();
-            }, ANIMATION_SPEED_MS);
+            }, idx * ANIMATION_SPEED_MS);
         })
     };
 
@@ -146,10 +142,6 @@ export class SortingVisualizer extends React.Component<{}, ArrayState> {
         const barB = currArrayBars[indexB] as HTMLElement;
         if (currentSwap) {
             barA.style.height = `${currentSwap}px`;
-            /* barA.style.filter = `brightness(
-                ${
-                (currentSwap / MAX_BAR_HEIGHT) > .1 ? .95 - (currentSwap / MAX_BAR_HEIGHT) : .05
-                })` */
         }
         barA.style.backgroundColor = DEFAULT_BAR_COLOUR;
         barB.style.backgroundColor = DEFAULT_BAR_COLOUR;
@@ -162,7 +154,7 @@ export class SortingVisualizer extends React.Component<{}, ArrayState> {
             insertionBar.style.backgroundColor = DEFAULT_BAR_COLOUR;
             setTimeout(() => {
                 resolve();
-            }, ANIMATION_SPEED_MS);
+            }, idx * ANIMATION_SPEED_MS);
         })
     }
 }
