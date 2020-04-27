@@ -1,27 +1,25 @@
-import { InsertionSortAnimation } from '../utils/types';
+import { AnimationObject } from '../utils/types';
 
-export const insertionSort = (nums: number[]): InsertionSortAnimation[] => {
+export const insertionSort = (nums: number[]): AnimationObject[] => {
     console.log('CALLED INSERTION SORT FUNCTION');
     if (nums.length < 2) {
         console.log('Array is already sorted.');
         throw new Error('Array is size 1 and is already sorted');
     }
     const testNums: number[] = nums.slice();
-    // initialize animations array
-    let animations: InsertionSortAnimation[] = [];
+    let animations: AnimationObject[] = [];
 
-    // !!! NOT ELEGANT. REFACTOR LATER - WITH SOME ADD ANIMATION SERVICE HELPER!!!
     for (let i: number = 1; i < nums.length; i++) {
         let curr: number = nums[i];
         let j: number = i - 1;
-        let currentAnimation: InsertionSortAnimation = { insertionPoint: i };
+        let currentAnimation: AnimationObject = { insertionPoint: i };
 
         while (j >= 0 && nums[j] > curr) {
-            let innerAnimation: InsertionSortAnimation = { insertionPoint: i };
+            let innerAnimation: AnimationObject = { insertionPoint: i };
             let currentSwapIndices: number[] = [j + 1, j];
             nums[j + 1] = nums[j];
             innerAnimation.currentSwapIndices = currentSwapIndices;
-            innerAnimation.currentSwap = nums[j];
+            innerAnimation.currentSwap = [nums[j]];
             animations.push(innerAnimation)
             j = j - 1;
         }
@@ -29,7 +27,7 @@ export const insertionSort = (nums: number[]): InsertionSortAnimation[] => {
         let currentSwap: number = curr;
         nums[j + 1] = curr;
         currentAnimation.currentSwapIndices = currentSwapIndices;
-        currentAnimation.currentSwap = currentSwap;
+        currentAnimation.currentSwap = [currentSwap];
         animations.push(currentAnimation)
     }
     console.log('INSERTION SORT FUNCTION COMPLETE, RETURNING ANIMATIONS');
@@ -37,8 +35,44 @@ export const insertionSort = (nums: number[]): InsertionSortAnimation[] => {
         arrayEqualityChecker(nums, testNums);
         return animations;
     } catch (err) {
-        console.log(`sorting algorithm incorrectly implemented. ${err.message}`);
+        console.log(`Insertion sort algorithm incorrectly implemented. ${err.message}`);
         throw new Error('Insertion sort failed.');
+    }
+}
+
+export const bubbleSort = (nums: number[]): AnimationObject[] => {
+    console.log('Bubble sort called');
+    let len: number = nums.length;
+    if (len < 2) {
+        console.log('Array is already sorted.');
+        throw new Error('Array is size 1 and is already sorted');
+    }
+
+    let testNums: number[] = nums.slice();
+    let animations: AnimationObject[] = [];
+
+    for (let i = 0; i < len; i++) {
+        let currentAnimation: AnimationObject = { bubbleSortedCount: i + 1 };
+        for (let j = 0; j < len - i - 1; j++) {
+            let innerAnimation: AnimationObject = {};
+            innerAnimation.currentSwapIndices = [j, j + 1];
+
+            if (nums[j] > nums[j + 1]) {
+                let temp: number = nums[j];
+                nums[j] = nums[j + 1];
+                nums[j + 1] = temp;
+                innerAnimation.currentSwap = [nums[j], nums[j + 1]];
+            }
+            animations.push(innerAnimation);
+        }
+        animations.push(currentAnimation);
+    }
+    try {
+        arrayEqualityChecker(nums, testNums);
+        return animations;
+    } catch (err) {
+        console.log(`Bubble sort algorithm incorrectly implemented. ${err.message}`);
+        throw new Error('Bubble sort failed.');
     }
 }
 
