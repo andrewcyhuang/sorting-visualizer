@@ -1,10 +1,14 @@
 export type ArrayState = {
-    array: number[]
+  array: number[];
 };
 
 export type AnimationObject = {
-    insertionPoint?: number,
-    currentSwap?: number[],
-    currentSwapIndices?: number[],
-    bubbleSortedCount?: number
-}
+  insertionPoint?: number;
+  currentSwap?: number[];
+  currentSwapIndices?: number[];
+  bubbleSortedCount?: number;
+};
+
+export type SortingVisualizerProps = {
+
+};
