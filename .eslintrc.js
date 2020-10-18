@@ -30,7 +30,7 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json',
   },
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier', 'jest'],
   rules: {
     'react/jsx-filename-extension': 0,
     'react/jsx-props-no-spreading': 0,

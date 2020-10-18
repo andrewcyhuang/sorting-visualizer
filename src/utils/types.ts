@@ -7,6 +7,10 @@ export type AnimationObject = {
   currentSwap?: number[];
   currentSwapIndices?: number[];
   bubbleSortedCount?: number;
+  pivotIdx?: number;
+  leftIdx?: number;
+  rightIdx?: number;
+  done?: boolean;
 };
 
 export type SortingVisualizerProps = {
