@@ -1,4 +1,4 @@
-export type ArrayState = {
+export type VisualizerState = {
   array: number[];
 };
 

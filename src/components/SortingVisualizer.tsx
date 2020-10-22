@@ -4,21 +4,12 @@ import { insertionSort } from '../algorithms/insertionSort';
 import { bubbleSort } from '../algorithms/bubbleSort';
 import { mergeSort } from '../algorithms/mergeSort';
 import { quickSort } from '../algorithms/quickSort';
-import { ArrayState, AnimationObject, SortingVisualizerProps } from '../utils/types';
+import { VisualizerState, AnimationObject, SortingVisualizerProps } from '../utils/types';
 import '../styles/SortingVisualizer.css';
 import { randomInt } from '../utils/util';
+import { DEFAULT_BAR_COLOUR, SWAPPING_POINT_BAR_COLOUR, ANIMATION_SPEED_MS, INSERTION_POINT_BAR_COLOUR, SORTED_BAR_COLOUR, MIN_BAR_HEIGHT, BAR_WIDTH, NUM_BARS, MAX_BAR_HEIGHT, BAR_GAP } from '../utils/config';
 
-// configuration
-const MIN_BAR_HEIGHT = 10;
-const MAX_BAR_HEIGHT = 580;
-const NUM_BARS = 300;
-const DEFAULT_BAR_COLOUR = '#660099';
-const SORTED_BAR_COLOUR = '#0000FF';
-const INSERTION_POINT_BAR_COLOUR = '#0000FF';
-const SWAPPING_POINT_BAR_COLOUR = '#FF00CC';
-const ANIMATION_SPEED_MS = 0.01;
-
-export class SortingVisualizer extends React.Component<unknown, ArrayState> {
+export class SortingVisualizer extends React.Component<unknown, VisualizerState> {
   constructor(props: SortingVisualizerProps) {
     super(props);
 
@@ -30,8 +21,8 @@ export class SortingVisualizer extends React.Component<unknown, ArrayState> {
   componentDidMount() {
     this.scrambleArray();
     // for testing purposes
-    /* let array: number[] = [500, 400, 300, 200, 100];
-                this.setState({ array }); */
+    // let array: number[] = [534, 893, 543, 643, 100, 432, 456, 300, 400, 562, 325];
+    // this.setState({ array });
   }
 
   static resolveComparingBars(
@@ -44,11 +35,13 @@ export class SortingVisualizer extends React.Component<unknown, ArrayState> {
     if (currentSwap) {
       for (let i = 0; i < currentSwap.length; i += 1) {
         const currBar = currArrayBars[currentSwapIndices[i]] as HTMLElement;
+        console.log(`${i}, ${currBar}`);
         currBar.style.height = `${currentSwap[i]}px`;
       }
     }
     currentSwapIndices.forEach((value) => {
       const currBar = currArrayBars[value] as HTMLElement;
+      console.log(`${value}, ${currBar}`);
       currBar.style.backgroundColor = DEFAULT_BAR_COLOUR;
     });
   }
@@ -92,7 +85,8 @@ export class SortingVisualizer extends React.Component<unknown, ArrayState> {
   static async toggleIndividualBar(
     stepper: number,
     idx: number,
-    done: boolean = true
+    done: boolean = true,
+    insertionBar: boolean = false
   ): Promise<void> {
     return new Promise((resolve) => {
       const currArrayBars: HTMLCollectionOf<Element> = document.getElementsByClassName(
@@ -100,7 +94,7 @@ export class SortingVisualizer extends React.Component<unknown, ArrayState> {
       );
       const currBar = currArrayBars[stepper] as HTMLElement;
 
-      const colour = done ? DEFAULT_BAR_COLOUR : SWAPPING_POINT_BAR_COLOUR;
+      const colour = done ? DEFAULT_BAR_COLOUR : insertionBar ? INSERTION_POINT_BAR_COLOUR : SWAPPING_POINT_BAR_COLOUR;
       currBar.style.backgroundColor = colour;
       setTimeout(() => {
         resolve();
@@ -158,7 +152,7 @@ export class SortingVisualizer extends React.Component<unknown, ArrayState> {
     const { currentSwapIndices } = animation;
 
     if (insertionPoint) {
-      await SortingVisualizer.toggleIndividualBar(insertionPoint, idx, false);
+      await SortingVisualizer.toggleIndividualBar(insertionPoint, idx, false, true);
     }
 
     if (currentSwap && currentSwapIndices) {
@@ -198,15 +192,15 @@ export class SortingVisualizer extends React.Component<unknown, ArrayState> {
   static async doQuickAnimation(animation: AnimationObject, idx: number): Promise<void> {
     const { pivotIdx, leftIdx, rightIdx, done, currentSwap, currentSwapIndices } = animation;
 
-    if (pivotIdx) {
+    if (pivotIdx && pivotIdx > 0) {
       await SortingVisualizer.toggleIndividualBar(pivotIdx, idx, done);
     }
 
-    if (leftIdx) {
+    if (leftIdx && leftIdx > 0) {
       await SortingVisualizer.toggleIndividualBar(leftIdx, idx, done);
     }
 
-    if (rightIdx) {
+    if (rightIdx && rightIdx > 0) {
       await SortingVisualizer.toggleIndividualBar(rightIdx, idx, done);
     }
 
@@ -219,6 +213,8 @@ export class SortingVisualizer extends React.Component<unknown, ArrayState> {
         if (currentSwap) {
           SortingVisualizer.resolveComparingBars(currentSwapIndices, currentSwap);
         };
+      }).catch(e => {
+        console.log(`resolving comparing bars failed: ${e}. Inputs: ${currentSwap}, ${currentSwapIndices}`)
       });
     }
   }
@@ -288,17 +284,18 @@ export class SortingVisualizer extends React.Component<unknown, ArrayState> {
     const { array } = this.state;
     let animations: AnimationObject[];
 
-    try {
-      if (array) {
-        animations = quickSort(array);
-        for (let i = 0; i < animations.length; i += 1) {
+    if (array) {
+      animations = quickSort(array);
+      let i: number = 0;
+      try {
+        for (i = 0; i < animations.length; i += 1) {
           await SortingVisualizer.doQuickAnimation(animations[i], i);
         }
-      } else {
-        console.log('Error: State array not initialized yet.');
-      }
-    } catch (err) {
-      console.log(`quickSortTrigger failed. ${err}`);
+      } catch (e) {
+        console.log(`doQuickAnimation failed ${e} curr: ${JSON.stringify(animations[i])}`);
+      };
+    } else {
+      console.log('Error: State array not initialized yet.');
     }
   };
 
@@ -315,6 +312,8 @@ export class SortingVisualizer extends React.Component<unknown, ArrayState> {
               style={{
                 backgroundColor: DEFAULT_BAR_COLOUR,
                 height: `${value}px`,
+                width:  `${BAR_WIDTH}px`,
+                marginRight: `${BAR_GAP}px`
               }}
             />
           ))}

@@ -7,4 +7,10 @@ export default makeStyles({
   title: {
     flexGrow: 1,
   },
+  header: {
+    display: 'flex',
+    textAlign: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column'
+  }
 });

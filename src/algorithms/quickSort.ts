@@ -61,6 +61,12 @@ const partition = (nums: number[], left: number, right: number, p: number, anima
         done: false
       });
     }
+
+    animations.push({
+      leftIdx: left, 
+      rightIdx: right,
+      done: true
+    });
   }
 
   return left;
@@ -71,7 +77,7 @@ const doQuickSort = (nums: number[], left: number, right: number, animations: An
     const p: number = Math.floor((left + right) / 2);
     const i: number = partition(nums, left, right, p, animations);
   
-    if (left < i) {
+    if (left < i - 1) {
       doQuickSort(nums, left, i - 1, animations);
     }
     
