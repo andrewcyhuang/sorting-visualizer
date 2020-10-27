@@ -10,9 +10,6 @@ To use my sorting visualizer, clone the repo and run these commands in the root 
 
 ```sh
 npm install
-```
-
-```sh
 npm run start
 ```
 
